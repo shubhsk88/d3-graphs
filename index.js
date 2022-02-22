@@ -3,7 +3,15 @@ import dataset from './my_weather_data.json';
 
 function drawChart() {
   // 1. Access data
-  console.log(dataset);
+  console.log(dataset[0]);
+  const temperatureMinAccessor = (d) => d.temperatureMin;
+  const temperatureMaxAccessor = (d) => d.temperatureMax;
+  const uvAccessor = (d) => d.uvIndex;
+  const precipitationProbabilityAccessor = (d) => d.precipProbability;
+  const precipitationTypeAccessor = (d) => d.precipType;
+  const cloudAccessor = (d) => d.cloudCover;
+  const dateParser = d3.timeParse('%Y-%m-%d');
+  const dateAccessor = (d) => dateParser(d.date);
 
   // 2. Create chart dimensions
 
@@ -38,15 +46,38 @@ function drawChart() {
     .append('g')
     .style(
       'transform',
-      `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`
+      `translate(${dimensions.margin.left + dimensions.radius}px, ${
+        dimensions.margin.top + dimensions.radius
+      }px)`
     );
 
   // 4. Create scales
 
-  // 5. Draw data
+  const angleScale = d3
+    .scaleTime()
+    .domain(d3.extent(dataset, dateAccessor))
+    .range([0, 2 * Math.PI]);
 
   // 6. Draw peripherals
+  const peripherals = bounds.append('g');
+  const months = d3.timeMonth.range(...angleScale.domain());
 
+  const getCoordinatesFromAngle = (angle, offset = 1) => [
+    offset * dimensions.radius * Math.cos(angle - Math.PI / 2),
+    offset * dimensions.radius * Math.sin(angle - Math.PI / 2),
+  ];
+  // console.log(months);
+  months.forEach((month) => {
+    const angle = angleScale(month);
+    const [x, y] = getCoordinatesFromAngle(angle);
+    peripherals
+      .append('line')
+      .attr('x2', x)
+      .attr('y2', y)
+      .attr('class', 'spoke-lines');
+  });
+
+  // 5. Draw data
   // 7. Set up interactions
 }
 drawChart();
