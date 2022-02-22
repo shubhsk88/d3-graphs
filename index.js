@@ -3,7 +3,7 @@ import dataset from './my_weather_data.json';
 
 function drawChart() {
   // 1. Access data
-  console.log(dataset[0]);
+
   const temperatureMinAccessor = (d) => d.temperatureMin;
   const temperatureMaxAccessor = (d) => d.temperatureMax;
   const uvAccessor = (d) => d.uvIndex;
@@ -46,8 +46,8 @@ function drawChart() {
     .append('g')
     .style(
       'transform',
-      `translate(${dimensions.margin.left + dimensions.radius}px, ${
-        dimensions.margin.top + dimensions.radius
+      `translate(${dimensions.margin.left + dimensions.boundedRadius}px, ${
+        dimensions.margin.top + dimensions.boundedRadius
       }px)`
     );
 
@@ -63,8 +63,8 @@ function drawChart() {
   const months = d3.timeMonth.range(...angleScale.domain());
 
   const getCoordinatesFromAngle = (angle, offset = 1) => [
-    offset * dimensions.radius * Math.cos(angle - Math.PI / 2),
-    offset * dimensions.radius * Math.sin(angle - Math.PI / 2),
+    offset * dimensions.boundedRadius * Math.cos(angle - Math.PI / 2),
+    offset * dimensions.boundedRadius * Math.sin(angle - Math.PI / 2),
   ];
   // console.log(months);
   months.forEach((month) => {
@@ -74,7 +74,18 @@ function drawChart() {
       .append('line')
       .attr('x2', x)
       .attr('y2', y)
-      .attr('class', 'spoke-lines');
+      .attr('class', 'grid-lines');
+    const [labelX, labelY] = getCoordinatesFromAngle(angle, 1.38);
+    peripherals
+      .append('text')
+      .text(d3.timeFormat('%b')(month))
+      .attr('x', labelX)
+      .attr('y', labelY)
+      .attr('class', 'tick-label')
+      .style(
+        'text-anchor',
+        Math.abs(labelX) < 5 ? 'middle' : labelX > 0 ? 'start' : 'end'
+      );
   });
 
   // 5. Draw data
