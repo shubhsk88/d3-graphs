@@ -58,6 +58,25 @@ function drawChart() {
     .domain(d3.extent(dataset, dateAccessor))
     .range([0, 2 * Math.PI]);
 
+  const radiusScale = d3
+    .scaleLinear()
+    .domain([
+      ...d3.extent(dataset, temperatureMinAccessor),
+      ...d3.extent(dataset, temperatureMaxAccessor),
+    ])
+    .range([0, dimensions.boundedRadius])
+    .nice();
+
+  const temperatureScale = d3
+    .scaleLinear()
+    .domain(
+      d3.extent([
+        ...dataset.map(temperatureMaxAccessor),
+        ...dataset.map(temperatureMinAccessor),
+      ])
+    )
+    .range([0, dimensions.boundedRadius]);
+
   // 6. Draw peripherals
   const peripherals = bounds.append('g');
   const months = d3.timeMonth.range(...angleScale.domain());
@@ -69,12 +88,14 @@ function drawChart() {
   // console.log(months);
   months.forEach((month) => {
     const angle = angleScale(month);
-    const [x, y] = getCoordinatesFromAngle(angle);
+    const [x, y] = getCoordinatesFromAngle(angle, 1);
+
     peripherals
       .append('line')
+
       .attr('x2', x)
       .attr('y2', y)
-      .attr('class', 'grid-lines');
+      .attr('class', 'grid-line');
     const [labelX, labelY] = getCoordinatesFromAngle(angle, 1.38);
     peripherals
       .append('text')
@@ -86,6 +107,35 @@ function drawChart() {
         'text-anchor',
         Math.abs(labelX) < 5 ? 'middle' : labelX > 0 ? 'start' : 'end'
       );
+  });
+  const temperatureTicks = temperatureScale.ticks(4);
+  const gridCircles = temperatureTicks.map((d) => {
+    peripherals
+      .append('circle')
+
+      .attr('r', radiusScale(d))
+      .attr('class', 'temperature-grids');
+  });
+
+  const ticklabelBackgrounds = temperatureTicks.map((d) => {
+    if (d < 1) return;
+    peripherals
+      .append('rect')
+
+      .attr('class', 'tick-temperature-background')
+      .attr('y', -radiusScale(d) - 10)
+      .attr('width', 40)
+      .attr('height', 20)
+      .attr('fill', '#f8f9fa');
+  });
+  const gridLabels = temperatureTicks.map((d) => {
+    if (d < 1) return;
+    peripherals
+      .append('text')
+      .attr('x', 4)
+      .attr('class', 'tick-temperature-label')
+      .attr('y', -radiusScale(d) + 2)
+      .html(`${d}°F `);
   });
 
   // 5. Draw data

@@ -25,10 +25,10 @@ body {
   text-align: center;
   display: flex;
   align-items: center;
-  font-feature-settings: 'tnum' 1;
+  /* font-feature-settings: "tnum"; */
 }
 
-.grid-lines {
+.grid-line {
   stroke: cornflowerblue;
 }
 
@@ -38,4 +38,16 @@ body {
   dominant-baseline: middle;
   font-weight: 600;
   letter-spacing: 0.007em;
+}
+
+.temperature-grids {
+  fill: none;
+  stroke: brown;
+}
+.tick-temperature-label {
+  fill: #8395a7;
+  opacity: 0.7;
+
+  font-size: 0.7em;
+  dominant-baseline: middle;
 }
