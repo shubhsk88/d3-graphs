@@ -138,6 +138,10 @@ function drawChart() {
       .html(`${d}°F `);
   });
 
+  const freezingCircle = peripherals
+    .append('circle')
+    .attr('r', radiusScale(32))
+    .attr('class', 'freezing-circle');
   // 5. Draw data
   // 7. Set up interactions
 }

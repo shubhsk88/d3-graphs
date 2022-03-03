@@ -51,3 +51,8 @@ body {
   font-size: 0.7em;
   dominant-baseline: middle;
 }
+
+.freezing-circle {
+  fill: #00d2d3;
+  opacity: 0.15;
+}
