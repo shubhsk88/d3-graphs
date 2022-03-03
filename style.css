@@ -1,7 +1,7 @@
-@font-face {
+/* @font-face {
   font-family: 'Inter var';
   src: url('./../../Inter.var.woff2');
-}
+} */
 
 body {
   display: flex;

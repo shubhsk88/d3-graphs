@@ -52,6 +52,18 @@ function drawChart() {
     );
 
   // 4. Create scales
+  const defs = wrapper.append('defs');
+
+  const gradientId = 'temperature-gradient';
+  const gradient = defs.append('radialGradient').attr('id', gradientId);
+  const numberOfStops = 10;
+  const gradientColorScale = d3.interpolateYlOrRd;
+  d3.range(10).forEach((i) => {
+    gradient
+      .append('stop')
+      .attr('offset', `${(i * 100) / (numberOfStops - 1)}%`)
+      .attr('stop-color', gradientColorScale(i / (numberOfStops - 1)));
+  });
 
   const angleScale = d3
     .scaleTime()
@@ -142,6 +154,17 @@ function drawChart() {
     .append('circle')
     .attr('r', radiusScale(32))
     .attr('class', 'freezing-circle');
+
+  const areaGenerator = d3
+    .areaRadial()
+    .angle((d) => angleScale(dateAccessor(d)))
+    .innerRadius((d) => radiusScale(temperatureMinAccessor(d)))
+    .outerRadius((d) => radiusScale(temperatureMaxAccessor(d)));
+
+  const area = bounds
+    .append('path')
+    .attr('d', areaGenerator(dataset))
+    .style('fill', `url(#${gradientId})`);
   // 5. Draw data
   // 7. Set up interactions
 }
