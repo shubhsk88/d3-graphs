@@ -58,7 +58,7 @@ function drawChart() {
   const gradient = defs.append('radialGradient').attr('id', gradientId);
   const numberOfStops = 10;
   const gradientColorScale = d3.interpolateYlOrRd;
-  d3.range(10).forEach((i) => {
+  d3.range(numberOfStops).forEach((i) => {
     gradient
       .append('stop')
       .attr('offset', `${(i * 100) / (numberOfStops - 1)}%`)
@@ -97,6 +97,12 @@ function drawChart() {
     offset * dimensions.boundedRadius * Math.cos(angle - Math.PI / 2),
     offset * dimensions.boundedRadius * Math.sin(angle - Math.PI / 2),
   ];
+
+  const getXCoordinateFromData = (d, offset) =>
+    getCoordinatesFromAngle(angleScale(dateAccessor(d)), offset)[0];
+  const getYCoordinateFromData = (d, offset) =>
+    getCoordinatesFromAngle(angleScale(dateAccessor(d)), offset)[1];
+
   // console.log(months);
   months.forEach((month) => {
     const angle = angleScale(month);
@@ -165,6 +171,21 @@ function drawChart() {
     .append('path')
     .attr('d', areaGenerator(dataset))
     .style('fill', `url(#${gradientId})`);
+
+  const uvIndexOffset = 0.95;
+  const uvIndexThresold = 8;
+  const uvGroup = bounds.append('g');
+ 
+  const highUVDays = uvGroup
+    .selectAll('line')
+    .data(dataset.filter((d) => uvAccessor(d) > uvIndexThresold))
+    .join('line')
+    .attr('class', 'uv-line')
+    .attr('x1', (d) => getXCoordinateFromData(d, uvIndexOffset))
+    .attr('y1', (d) => getYCoordinateFromData(d, uvIndexOffset))
+    .attr('x2', (d) => getXCoordinateFromData(d, uvIndexOffset + 0.1))
+    .attr('y2', (d) => getYCoordinateFromData(d, uvIndexOffset + 0.1));
+
   // 5. Draw data
   // 7. Set up interactions
 }
