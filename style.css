@@ -69,3 +69,15 @@ body {
 .precipitation-dot {
   opacity: 0.5;
 }
+
+.annotation-line {
+  stroke: #34495e;
+  stroke-width: 2;
+  opacity: 0.4;
+  fill: none;
+}
+.annotation-text {
+  fill: #34495e;
+  font-size: 0.7em;
+  dominant-baseline: middle;
+}
