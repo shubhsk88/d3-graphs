@@ -266,6 +266,23 @@ function drawChart() {
     radiusScale(32) / dimensions.boundedRadius,
     'Freezing Temperature'
   );
+
+  precipitationTypes.forEach((precipitation, index) => {
+    const labelCoordinates = getCoordinatesFromAngle(Math.PI * 0.26, 1.6);
+
+    annotationGroup
+      .append('circle')
+      .attr('cx', labelCoordinates[0] + 15)
+      .attr('cy', labelCoordinates[1] + 16 * (index + 1))
+      .attr('r', 4)
+      .style('fill', precipitationTypesColorScale(precipitation));
+    annotationGroup
+      .append('text')
+      .attr('x', labelCoordinates[0] + 25)
+      .attr('y', labelCoordinates[1] + 16 * (index + 1))
+      .text(precipitation)
+      .attr('class', 'annotation-text');
+  });
   // 7. Set up interactions
 }
 drawChart();
