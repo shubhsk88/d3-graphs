@@ -63,5 +63,9 @@ body {
 
 .cloud-dot {
   fill: #c8d6e5;
-  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+.precipitation-dot {
+  opacity: 0.5;
 }

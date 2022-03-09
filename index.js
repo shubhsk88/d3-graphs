@@ -94,6 +94,18 @@ function drawChart() {
     .domain(d3.extent(dataset, cloudAccessor))
     .range([1, 10]);
 
+  const precipitationRadiusScale = d3
+    .scaleSqrt()
+    .domain(d3.extent(dataset, precipitationProbabilityAccessor))
+    .range([0, 7]);
+
+  const precipitationTypes = ['rain', 'sleet', 'snow'];
+
+  const precipitationTypesColorScale = d3
+    .scaleOrdinal()
+    .domain(precipitationTypes)
+    .range(['#54a0ff', '#636e72', '#b2bec3']);
+
   // 6. Draw peripherals
   const peripherals = bounds.append('g');
   const months = d3.timeMonth.range(...angleScale.domain());
@@ -201,6 +213,22 @@ function drawChart() {
     .attr('cx', (d) => getXCoordinateFromData(d, cloudOffset))
     .attr('cy', (d) => getYCoordinateFromData(d, cloudOffset))
     .attr('class', 'cloud-dot');
+
+  const precipitationGroup = bounds.append('g');
+  const precipitationOffset = 1.14;
+  const precipitation = precipitationGroup
+    .selectAll('circle')
+    .data(dataset)
+    .join('circle')
+    .attr('r', (d) =>
+      precipitationRadiusScale(precipitationProbabilityAccessor(d))
+    )
+    .attr('cx', (d) => getXCoordinateFromData(d, precipitationOffset))
+    .attr('cy', (d) => getYCoordinateFromData(d, precipitationOffset))
+    .style('fill', (d) =>
+      precipitationTypesColorScale(precipitationTypeAccessor(d))
+    )
+    .attr('class', 'precipitation-dot');
   // 5. Draw data
   // 7. Set up interactions
 }
