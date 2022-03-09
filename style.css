@@ -42,7 +42,7 @@ body {
 
 .temperature-grids {
   fill: none;
-  stroke: brown;
+  stroke: cornflowerblue;
 }
 .tick-temperature-label {
   fill: #8395a7;
@@ -59,4 +59,9 @@ body {
 .uv-line {
   stroke: #feca57;
   stroke-width: 2;
+}
+
+.cloud-dot {
+  fill: #c8d6e5;
+  mix-blend-mode: multiply;
 }

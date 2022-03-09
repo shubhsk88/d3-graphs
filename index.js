@@ -89,6 +89,11 @@ function drawChart() {
     )
     .range([0, dimensions.boundedRadius]);
 
+  const cloudRadiusScale = d3
+    .scaleSqrt()
+    .domain(d3.extent(dataset, cloudAccessor))
+    .range([1, 10]);
+
   // 6. Draw peripherals
   const peripherals = bounds.append('g');
   const months = d3.timeMonth.range(...angleScale.domain());
@@ -175,7 +180,7 @@ function drawChart() {
   const uvIndexOffset = 0.95;
   const uvIndexThresold = 8;
   const uvGroup = bounds.append('g');
- 
+
   const highUVDays = uvGroup
     .selectAll('line')
     .data(dataset.filter((d) => uvAccessor(d) > uvIndexThresold))
@@ -186,6 +191,16 @@ function drawChart() {
     .attr('x2', (d) => getXCoordinateFromData(d, uvIndexOffset + 0.1))
     .attr('y2', (d) => getYCoordinateFromData(d, uvIndexOffset + 0.1));
 
+  const cloudGroup = bounds.append('g');
+  const cloudOffset = 1.27;
+  const cloudCover = cloudGroup
+    .selectAll('circle')
+    .data(dataset)
+    .join('circle')
+    .attr('r', (d) => cloudRadiusScale(cloudAccessor(d)))
+    .attr('cx', (d) => getXCoordinateFromData(d, cloudOffset))
+    .attr('cy', (d) => getYCoordinateFromData(d, cloudOffset))
+    .attr('class', 'cloud-dot');
   // 5. Draw data
   // 7. Set up interactions
 }
