@@ -7,7 +7,33 @@
     <title>D3 Graphs</title>
   </head>
   <body>
-    <div id="wrapper"></div>
+    <div id="wrapper">
+      <div id="tooltip" class="tooltip">
+        <div id="tooltip-date" class="tooltip-date"></div>
+        <div id="tooltip-temperature" class="tooltip-temperature">
+          <span id="tooltip-temperature-min"></span>
+          -
+          <span id="tooltip-temperature-max"></span>
+        </div>
+        <div class="tooltip-metric tooltip-uv">
+          <div>UV Index</div>
+          <div id="tooltip-uv"></div>
+        </div>
+        <div class="tooltip-metric tooltip-cloud">
+          <div>Cloud Cover</div>
+          <div id="tooltip-cloud"></div>
+        </div>
+        <div class="tooltip-metric tooltip-precipitation">
+          <div>Precipitation Probability</div>
+          <div id="tooltip-precipitation"></div>
+        </div>
+        <div class="tooltip-metric tooltip-precipitation-type">
+          <div>Precipitation Type</div>
+          <div id="tooltip-precipitation-type"></div>
+        </div>
+      </div>
+    </div>
+
     <script src="index.js"></script>
   </body>
 </html>

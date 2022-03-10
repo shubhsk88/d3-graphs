@@ -284,5 +284,28 @@ function drawChart() {
       .attr('class', 'annotation-text');
   });
   // 7. Set up interactions
+
+  const listenerCircle = bounds
+    .append('circle')
+    .attr('r', dimensions.width / 2)
+    .attr('class', 'listener-circle')
+    .on('mousemove', onMouseMove)
+    .on('mouseleave', onMouseLeave);
+
+  const tooltip = d3.select('#tooltip');
+  const tooltipLine = bounds.append('path').attr('class', 'tooltip-line');
+  function onMouseMove(e) {
+    const getAngleFromCoordinates = (x, y) => Math.atan2(y, x);
+
+    const [x, y] = d3.pointer(e);
+
+    const angle = getAngleFromCoordinates(x, y) + Math.PI / 2;
+    console.log(angle);
+
+    tooltip.style('opacity', 1);
+  }
+  function onMouseLeave() {
+    tooltip.style('opacity', 0);
+  }
 }
 drawChart();
