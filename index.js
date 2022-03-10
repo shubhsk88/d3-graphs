@@ -299,13 +299,55 @@ function drawChart() {
 
     const [x, y] = d3.pointer(e);
 
-    const angle = getAngleFromCoordinates(x, y) + Math.PI / 2;
-    console.log(angle);
+    let angle = getAngleFromCoordinates(x, y) + Math.PI / 2;
+    if (angle < 0) angle = 2 * Math.PI + angle;
+    const arcGenerator = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(dimensions.boundedRadius * 1.6)
+      .startAngle(angle - 0.015)
+      .endAngle(angle + 0.015);
+    tooltipLine.attr('d', arcGenerator());
 
-    tooltip.style('opacity', 1);
+    const outerCoordinates = getCoordinatesFromAngle(angle, 1.6);
+
+    tooltip
+      .style('opacity', 1)
+      .style(
+        'transform',
+        `translate(calc(${
+          outerCoordinates[0] < -50
+            ? '40px + -100'
+            : outerCoordinates[0] > 50
+            ? '-40px + 0'
+            : -50
+        }% + ${
+          outerCoordinates[0] +
+          dimensions.margin.left +
+          dimensions.boundedRadius
+        }px), calc(${
+          outerCoordinates[1] < -50
+            ? '40px + -100'
+            : outerCoordinates[1] > 50
+            ? '-40px + 0'
+            : -50
+        }% + ${
+          outerCoordinates[1] + dimensions.margin.top + dimensions.boundedRadius
+        }px))`
+      );
+
+    // console.log(
+    //   `translate(calc(-50%+${
+    //     outerCoordinates[0] + dimensions.margin.left + dimensions.boundedRadius
+    //   }px), calc(-50%+${
+    //     outerCoordinates[1] + dimensions.margin.top + dimensions.boundedRadius
+    //   }px))`
+    // );
+    tooltipLine.style('opacity', 1);
   }
   function onMouseLeave() {
     tooltip.style('opacity', 0);
+    tooltipLine.style('opacity', 1);
   }
 }
 drawChart();
