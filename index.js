@@ -335,7 +335,25 @@ function drawChart() {
           outerCoordinates[1] + dimensions.margin.top + dimensions.boundedRadius
         }px))`
       );
-
+    const date = angleScale.invert(angle);
+    const dateString = d3.timeFormat('%Y-%m-%d')(date);
+    const dataPoint = dataset.find((d) => d.date === dateString);
+    if (!dataPoint) return;
+    d3.select('#tooltip-date').text(dataPoint.date);
+    d3.select('#tooltip-temperature-min').text(
+      temperatureMinAccessor(dataPoint)
+    );
+    d3.select('#tooltip-temperature-max').text(
+      temperatureMaxAccessor(dataPoint)
+    );
+    d3.select('#tooltip-uv').text(uvAccessor(dataPoint));
+    d3.select('#tooltip-cloud').text(cloudAccessor(dataPoint));
+    d3.select('#tooltip-precipitation').text(
+      precipitationProbabilityAccessor(dataPoint)
+    );
+    d3.select('#tooltip-precipitation-type').text(
+      precipitationTypeAccessor(dataPoint)
+    );
     // console.log(
     //   `translate(calc(-50%+${
     //     outerCoordinates[0] + dimensions.margin.left + dimensions.boundedRadius
